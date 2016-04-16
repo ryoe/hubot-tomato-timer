@@ -1,0 +1,25 @@
+{
+  "name": "hubot-tomato-timer",
+  "version": "1.0.0",
+  "description": "A hubot Pomodoro tomato timer written in CoffeeScript",
+  "main": "index.coffee",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ryoe/hubot-tomato-timer.git"
+  },
+  "keywords": [
+    "Hubot",
+    "tomato",
+    "timer",
+    "Pomodoro"
+  ],
+  "author": "ryoe",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ryoe/hubot-tomato-timer/issues"
+  },
+  "homepage": "https://github.com/ryoe/hubot-tomato-timer#readme"
+}
