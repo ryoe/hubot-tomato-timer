@@ -2,13 +2,13 @@
 #   Hubot will handle your tomato (Pomodoro) timer needs
 #
 # Commands:
-#   hubot tomato stop - stop a tomato timer
-#   hubot stop tomato - stop a tomato timer
 #   hubot tomato start - start a tomato timer
-#   hubot start tomato - start a tomato timer
-#   hubot tomato all -  show all the tomato timers, everywhere
-#   hubot all tomato - show all the tomato timers, everywhere
+#   hubot tomato stop - stop a tomato timer
+#   hubot tomato all - show all the tomato timers, everywhere
 #   hubot tomato help - return the allowed commands
+#   hubot start tomato - start a tomato timer
+#   hubot stop tomato - stop a tomato timer
+#   hubot all tomato - show all the tomato timers, everywhere
 #   hubot help tomato - return the allowed commands
 #
 # Configuration:
@@ -32,14 +32,14 @@ botName = 'botName not set'
 bot = null
 
 help = [
-  'start tomato - start a tomato timer'
-  'stop tomato - stop a tomato timer'
-  'all tomato - show all the tomato timers, everywhere'
-  'help tomato - return the allowed commands'
   'tomato start - start a tomato timer'
   'tomato stop - stop a tomato timer'
   'tomato all - show all the tomato timers, everywhere'
   'tomato help - return the allowed commands'
+  'start tomato - start a tomato timer'
+  'stop tomato - stop a tomato timer'
+  'all tomato - show all the tomato timers, everywhere'
+  'help tomato - return the allowed commands'
 ]
 
 stringCompare = (a, b) ->

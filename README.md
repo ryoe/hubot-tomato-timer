@@ -28,17 +28,16 @@ Or if you prefer, just drop **tomato-timer.coffee** in your [Hubot][hubot] scrip
 
 Each user can start a single timer per chat room. Everyone in a chatroom can start their own timer. 
 
-* `hubot stop tomato` - stop a tomato timer
-* `hubot start tomato` - start a tomato timer
-* `hubot all tomato` - show all the tomato timers, everywhere
-* `hubot help tomato` - return the allowed commands
-
-Or if you prefer, these work too:
-
 * `hubot tomato start` - start a tomato timer
 * `hubot tomato stop` - stop a tomato timer
 * `hubot tomato all` -  show all the tomato timers, everywhere
 * `hubot tomato help` - return the allowed commands
+
+Or if you prefer, these work too:
+* `hubot start tomato` - start a tomato timer
+* `hubot stop tomato` - stop a tomato timer
+* `hubot all tomato` - show all the tomato timers, everywhere
+* `hubot help tomato` - return the allowed commands
 
 ## Configure It
 
