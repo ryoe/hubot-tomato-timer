@@ -69,7 +69,7 @@ startTimer = (msg, userInfo) ->
   timer = timers[userInfo.key]
 
   if timer?
-    msg.send "Tomato timer already started for #{userInfo.name} in ##{userInfo.room}. Try `#{botName} stop tomato`"
+    msg.send "Tomato timer already started for #{userInfo.name} in ##{userInfo.room}. Try `#{botName} tomato stop`"
   else
     msg.send "Starting #{tomatoEmoji} timer for #{userInfo.name} in ##{userInfo.room}"
     timers[userInfo.key] = userInfo
@@ -85,7 +85,7 @@ stopTimer = (msg, userInfo) ->
     msg.send "Stopping #{tomatoEmoji} timer for #{userInfo.name} in ##{userInfo.room}"
     cleanUpTimer userInfo.key, timer.intervalId
   else
-    msg.send "No #{tomatoEmoji} timer exists for #{userInfo.name} in ##{userInfo.room}. Try `#{botName} start tomato`"
+    msg.send "No #{tomatoEmoji} timer exists for #{userInfo.name} in ##{userInfo.room}. Try `#{botName} tomato start`"
 
 showAllTimers = (msg, userInfo) ->
   keys = Object.keys timers
@@ -94,7 +94,7 @@ showAllTimers = (msg, userInfo) ->
     deets = ("#{key}: " + timeRemaining(timers[key].expectedStop) + " remaining" for key in keys).join "\n* "
     msg.send "Here are all the #{tomatoEmoji} timers!\n\n* #{deets}"
   else
-    msg.send "No #{tomatoEmoji} timers exist!. Try `#{botName} start tomato`"
+    msg.send "No #{tomatoEmoji} timers exist!. Try `#{botName} tomato start`"
 
 processCommands = (msg, cmd, cmdArgs) ->
   user = msg.message.user.name
