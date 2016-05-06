@@ -1,6 +1,6 @@
 {
   "name": "hubot-tomato-timer",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "The last Hubot tomato timer you'll ever need.",
   "main": "index.coffee",
   "scripts": {
