@@ -96,6 +96,30 @@ showAllTimers = (msg, userInfo) ->
   else
     msg.send "No #{tomatoEmoji} timers exist!. Try `#{botName} tomato start`"
 
+showMyTimers = (msg, userInfo) ->
+  allKeys = Object.keys timers
+
+  unless allKeys? and allKeys.length > 0
+    msg.send "No #{tomatoEmoji} timers exist!. Try `#{botName} tomato start`"
+    return
+
+  keys = allKeys.filter (key) -> return key if timers[key].name == userInfo.name
+
+  if keys? and keys.length > 0
+    deets = ("#{key}: " + timeRemaining(timers[key].expectedStop) + " remaining" for key in keys).join "\n* "
+    msg.reply "Here are your #{tomatoEmoji} timers!\n\n* #{deets}"
+  else
+    msg.send "No #{tomatoEmoji} timers exist!. Try `#{botName} tomato start`"
+
+showTimerInfo = (msg, userInfo) ->
+  timer = timers[userInfo.key]
+
+  if timer?
+    deets = timeRemaining(timer.expectedStop) + " remaining"
+    msg.reply "Your #{tomatoEmoji} timer info: #{deets}"
+  else
+    msg.send "No #{tomatoEmoji} timers exist!. Try `#{botName} tomato start`"
+
 processCommands = (msg, cmd, cmdArgs) ->
   user = msg.message.user.name
   room = msg.message.user.room
@@ -115,6 +139,12 @@ processCommands = (msg, cmd, cmdArgs) ->
   if cmd and stringCompare cmd, 'stop'
     stopTimer msg, userInfo
     return
+  if cmd and stringCompare cmd, 'info'
+    showTimerInfo msg, userInfo
+    return
+  if cmd and stringCompare cmd, 'mine'
+    showMyTimers msg, userInfo
+    return
   if cmd and stringCompare cmd, 'all'
     showAllTimers msg, userInfo
     return
@@ -125,13 +155,15 @@ module.exports = (robot) ->
   botName = robot.name
   bot = robot
 
-  robot.respond /(all|start|stop|help){1} (tomato|timer|Pomodoro|:tomato:){1}/i, (msg) ->
+  robot.respond /(all|start|stop|info|mine|help){1} (tomato|timer|Pomodoro|:tomato:){1}/i, (msg) ->
+    console.log "ONE"
     cmd     = msg.match[1] or null
     cmdArgs = msg.match[2] or null
 
     processCommands msg, cmd, cmdArgs
 
-  robot.respond /(tomato timer|tomato|:tomato: timer|:tomato:|timer|Pomodoro){1} (all|start|stop|help){1}/i, (msg) ->
+  robot.respond /(tomato timer|tomato|:tomato: timer|:tomato:|timer|Pomodoro){1} (all|start|stop|info|mine|help){1}/i, (msg) ->
+    console.log "TWO"
     cmd     = msg.match[2] or null
     cmdArgs = msg.match[1] or null
 
