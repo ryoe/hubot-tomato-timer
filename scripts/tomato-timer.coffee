@@ -5,11 +5,10 @@
 #   hubot tomato start - start a tomato timer
 #   hubot tomato stop - stop a tomato timer
 #   hubot tomato all - show all the tomato timers, everywhere
+#   hubot tomato short break - start a short break timer
+#   hubot tomato long break - start a long break timer
+#   hubot tomato stop break - stop a tomato break timer
 #   hubot tomato help - return the allowed commands
-#   hubot start tomato - start a tomato timer
-#   hubot stop tomato - stop a tomato timer
-#   hubot all tomato - show all the tomato timers, everywhere
-#   hubot help tomato - return the allowed commands
 #
 # Configuration:
 #   HUBOT_TOMATO_TIMER_EMOJI - set the tomato timer emoji. default: `:tomato:`
@@ -25,9 +24,13 @@
 tomatoEmoji = process.env.HUBOT_TOMATO_TIMER_EMOJI or ':tomato:'
 
 # 25 minutes is standard Pomodoro
-# 25 minutes in milliseconds = 25*60*1000 = 1500000
-tomatoInterval = 1500000
+tomatoInterval = Math.floor(25*60*1000)
+# 5 minutes is standard Pomodoro short break
+shortBreakInterval = Math.floor(5*60*1000)
+# 10 minutes is standard Pomodoro long break
+longBreakInterval = Math.floor(10*60*1000)
 timers = {}
+breakTimers = {}
 botName = 'botName not set'
 bot = null
 
@@ -35,15 +38,56 @@ help = [
   'tomato start - start a tomato timer'
   'tomato stop - stop a tomato timer'
   'tomato all - show all the tomato timers, everywhere'
+  'tomato short break - start a short break timer'
+  'tomato long break - start a long break timer'
+  'tomato stop break - stop a tomato break timer'
   'tomato help - return the allowed commands'
-  'start tomato - start a tomato timer'
-  'stop tomato - stop a tomato timer'
-  'all tomato - show all the tomato timers, everywhere'
-  'help tomato - return the allowed commands'
 ]
 
 stringCompare = (a, b) ->
   return a.toLowerCase() is b
+
+cleanUpBreakTimer = (key, intervalId) ->
+  #stop break timer and remove the key from breakTimers map
+  clearInterval intervalId
+  delete breakTimers[key]
+
+breakTimerCallback = (key) ->
+  userInfo = breakTimers[key]
+
+  if userInfo?
+    cleanUpBreakTimer key, userInfo.intervalId
+    bot.messageRoom userInfo.room, "Hey #{userInfo.name}! Your #{tomatoEmoji} break time is over!"
+  else
+    console.log "WAT?!?!?"
+
+startBreakTimer = (msg, userInfo, breakInterval) ->
+  breakTimer = breakTimers[userInfo.key]
+
+  if breakTimer?
+    msg.send "#{tomatoEmoji} break timer already started for #{userInfo.name} in ##{userInfo.room}. Try `#{botName} tomato stop break`"
+  else
+    msg.send "Starting #{tomatoEmoji} break timer for #{userInfo.name} in ##{userInfo.room}"
+    breakTimers[userInfo.key] = userInfo
+    intervalId = setInterval breakTimerCallback, breakInterval, userInfo.key
+    breakTimers[userInfo.key].intervalId = intervalId
+    breakTimers[userInfo.key].startTime = Date.now()
+    breakTimers[userInfo.key].expectedStop = breakTimers[userInfo.key].startTime + breakInterval
+
+startShortBreak = (msg, userInfo) ->
+  startBreakTimer msg, userInfo, shortBreakInterval
+
+startLongBreak = (msg, userInfo) ->
+  startBreakTimer msg, userInfo, longBreakInterval
+
+stopBreak = (msg, userInfo) ->
+  breakTimer = breakTimers[userInfo.key]
+
+  if breakTimer?
+    msg.send "Stopping #{tomatoEmoji} break timer for #{userInfo.name} in ##{userInfo.room}"
+    cleanUpBreakTimer userInfo.key, breakTimer.intervalId
+  else
+    msg.send "No #{tomatoEmoji} break timer exists for #{userInfo.name} in ##{userInfo.room}. Try `#{botName} tomato short break` or `#{botName} tomato long break`"
 
 cleanUpTimer = (key, intervalId) ->
   #stop timer and remove the key from timers map
@@ -69,7 +113,7 @@ startTimer = (msg, userInfo) ->
   timer = timers[userInfo.key]
 
   if timer?
-    msg.send "Tomato timer already started for #{userInfo.name} in ##{userInfo.room}. Try `#{botName} tomato stop`"
+    msg.send "#{tomatoEmoji} timer already started for #{userInfo.name} in ##{userInfo.room}. Try `#{botName} tomato stop`"
   else
     msg.send "Starting #{tomatoEmoji} timer for #{userInfo.name} in ##{userInfo.room}"
     timers[userInfo.key] = userInfo
@@ -145,6 +189,15 @@ processCommands = (msg, cmd, cmdArgs) ->
   if cmd and stringCompare cmd, 'mine'
     showMyTimers msg, userInfo
     return
+  if cmd and stringCompare cmd, 'long break'
+    startLongBreak msg, userInfo
+    return
+  if cmd and stringCompare cmd, 'short break'
+    startShortBreak msg, userInfo
+    return
+  if cmd and stringCompare cmd, 'stop break'
+    stopBreak msg, userInfo
+    return
   if cmd and stringCompare cmd, 'all'
     showAllTimers msg, userInfo
     return
@@ -155,15 +208,13 @@ module.exports = (robot) ->
   botName = robot.name
   bot = robot
 
-  robot.respond /(all|start|stop|info|mine|help){1} (tomato|timer|Pomodoro|:tomato:){1}/i, (msg) ->
-    console.log "ONE"
+  robot.respond /(short break|long break|stop break|all|start|stop|info|mine|help){1} (tomato|timer|Pomodoro|:tomato:){1}/i, (msg) ->
     cmd     = msg.match[1] or null
     cmdArgs = msg.match[2] or null
 
     processCommands msg, cmd, cmdArgs
 
-  robot.respond /(tomato timer|tomato|:tomato: timer|:tomato:|timer|Pomodoro){1} (all|start|stop|info|mine|help){1}/i, (msg) ->
-    console.log "TWO"
+  robot.respond /(tomato timer|tomato|:tomato: timer|:tomato:|timer|Pomodoro){1} (short break|long break|stop break|all|start|stop|info|mine|help){1}/i, (msg) ->
     cmd     = msg.match[2] or null
     cmdArgs = msg.match[1] or null
 

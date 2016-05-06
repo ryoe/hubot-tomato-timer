@@ -30,14 +30,13 @@ Each user can start a single timer per chat room. Everyone in a chatroom can sta
 
 * `hubot tomato start` - start a tomato timer
 * `hubot tomato stop` - stop a tomato timer
+* `hubot tomato info` - show info about the current tomato timer
+* `hubot tomato mine` - show info about all of my current tomato timers
 * `hubot tomato all` -  show all the tomato timers, everywhere
+* `hubot tomato short break` - start a short break timer
+* `hubot tomato long break` - start a long break timer
+* `hubot tomato stop break` - stop a tomato break timer
 * `hubot tomato help` - return the allowed commands
-
-Or if you prefer, these work too:
-* `hubot start tomato` - start a tomato timer
-* `hubot stop tomato` - stop a tomato timer
-* `hubot all tomato` - show all the tomato timers, everywhere
-* `hubot help tomato` - return the allowed commands
 
 ## Configure It
 
